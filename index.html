@@ -51,6 +51,7 @@
       padding: 20px;
       z-index: 100;
       transition: transform 0.3s ease;
+      position: relative; /* Added for close button positioning */
     }
 
     .logo-area {
@@ -62,6 +63,19 @@
     }
     .logo-dot { width: 12px; height: 12px; background: var(--primary); border-radius: 3px; transform: rotate(45deg); box-shadow: 0 0 15px var(--primary); }
     .logo-text { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
+
+    /* Cross Sign Button for Mobile */
+    .close-btn {
+      display: none; /* Hidden by default */
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      z-index: 110;
+    }
 
     .new-chat-btn {
       width: 100%;
@@ -230,7 +244,7 @@
     @media (max-width: 1000px) {
       #chat, .input-area-wrapper { padding-left: 5%; padding-right: 5%; }
       .sidebar {
-        position: absolute;
+        position: fixed; /* Changed to fixed for better mobile behavior */
         left: 0;
         top: 0;
         bottom: 0;
@@ -239,6 +253,7 @@
       }
       .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: flex; }
+      .close-btn { display: block; } /* Show X only on mobile */
       .chat-header-main { padding: 15px 20px; }
     }
 
@@ -257,6 +272,10 @@
 
   <main>
     <aside class="sidebar" id="sidebar">
+      <button class="close-btn" onclick="toggleSidebar()">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
       <div class="sidebar-header">
         <div class="logo-area">
             <div class="logo-dot"></div>
@@ -334,14 +353,12 @@
 
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1413.0.min.js"></script>
   <script>
-    // Toggle Sidebar Function
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
     }
 
     function quickAsk(text) {
       document.getElementById("msg").value = text;
-      // Close sidebar after selection on mobile
       if (window.innerWidth <= 1000) {
         document.getElementById('sidebar').classList.remove('open');
       }
